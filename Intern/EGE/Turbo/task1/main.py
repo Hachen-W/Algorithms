@@ -21,8 +21,8 @@ def search_expression(string: str) -> int:
 def main():
     string = open('75607_35594199913785041_doc.txt').readline()
     string = '+' + string + '+'
-    return search_expression(string)
+    print(search_expression(string))
 
 
 if __name__ == "__main__":
-    print(main())
+    main()
