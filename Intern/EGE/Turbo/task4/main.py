@@ -103,5 +103,5 @@ def solve(filename):
     return cluster_distances(clusters)
 
 
-print(*solve('A.txt'))
-print(*solve('B.txt'))
+print(*solve('73851_10874352736543798_doc.txt'))
+print(*solve('73851_10874352758283619_doc.txt'))
