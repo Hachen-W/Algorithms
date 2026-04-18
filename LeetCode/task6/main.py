@@ -13,7 +13,14 @@ class Solution:
             zigzagLastWidth = 1
         else:
             zigzagLastWidth = 1 + zigzagLastWidth - numRows
-        answer = [[0 * numRows] for _ in range(zigzagWidth * zigzagFullCount + zigzagLastWidth)]
+        numCols = zigzagWidth * zigzagFullCount + zigzagLastWidth
+        answer = [[0 * numRows] for _ in range(numCols)]
+
+        offset = zigzagWidth
+        for curRow in range(numRows):
+            for curCol in range(math.ceil(string_length / subarray_size) + 1):
+                pass
+
 
 
 print(Solution().convert("PAYPALISHIRING", 3))
