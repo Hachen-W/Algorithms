@@ -17,10 +17,15 @@ class Solution:
         answer = [[0 * numRows] for _ in range(numCols)]
 
         offset = zigzagWidth
+        index = 0
         for curRow in range(numRows):
-            for curCol in range(math.ceil(string_length / subarray_size) + 1):
-                pass
-
+            for curCol in range(0, math.ceil(string_length / subarray_size) + 1, zigzagWidth):
+                if curCol - offset > 0 and offset != zigzagWidth and offset != 0:
+                    answer[curCol][curRow] = s[index]
+                    index += 1
+                answer[curCol][curRow] = s[index]
+                index += 1
+                offset -= 1
 
 
 print(Solution().convert("PAYPALISHIRING", 3))
