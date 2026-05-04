@@ -1,74 +1,69 @@
 import sys
 
 def solution():
+    # Быстрое чтение всего ввода разом
     input_data = sys.stdin.read().split()
     if not input_data:
         return
 
     n = int(input_data[0])
     m = int(input_data[1])
-        
     patterns = input_data[2:]
 
-    groups = [{} for _ in range(1 << m)]
+    groups = {}
     for p in patterns:
         mask = 0
         for i in range(m):
             if p[i] != '?':
                 mask |= (1 << i)
+        
+        if mask not in groups:
+            groups[mask] = {}
         groups[mask][p] = groups[mask].get(p, 0) + 1
 
-    proj_count = [[{} for _ in range(1 << m)] for _ in range(1 << m)]
+    active_masks = list(groups.keys())
+    n_masks = len(active_masks)
     
-    for mask in range(1 << m):
-        if not groups[mask]:
-            continue
-        for s, count in groups[mask].items():
-            sub_mask = mask
-            while True:
-                proj_chars = []
-                for i in range(m):
-                    if sub_mask & (1 << i):
-                        proj_chars.append(s[i])
-                    else:
-                        proj_chars.append('?')
-                proj_s = "".join(proj_chars)
-
-                if proj_s in proj_count[mask][sub_mask]:
-                    proj_count[mask][sub_mask][proj_s] += count
-                else:
-                    proj_count[mask][sub_mask][proj_s] = count
-                    
-                if not sub_mask:
-                    break
-                sub_mask = (sub_mask - 1) & mask
-                
     ans = 0
 
-    for mask in range(1 << m):
-        for count in groups[mask].values():
+    for pat_counts in groups.values():
+        for count in pat_counts.values():
             if count >= 2:
                 ans += count * (count - 1) // 2
 
-    for mask1 in range(1 << m):
-        if not groups[mask1]:
-            continue
-        for mask2 in range(mask1 + 1, 1 << m):
-            if not groups[mask2]:
-                continue
+    memo = {mask: {} for mask in active_masks}
+    
+    def get_proj(mask, sub_mask):
+        if sub_mask in memo[mask]:
+            return memo[mask][sub_mask]
+
+        indices = [i for i in range(m) if (sub_mask & (1 << i))]
+                
+        res = {}
+        for p, count in groups[mask].items():
+            proj = tuple(p[i] for i in indices)
+            res[proj] = res.get(proj, 0) + count
+            
+        memo[mask][sub_mask] = res
+        return res
+
+    for i in range(n_masks):
+        mask1 = active_masks[i]
+        for j in range(i + 1, n_masks):
+            mask2 = active_masks[j]
 
             common_mask = mask1 & mask2
-            
-            dict1 = proj_count[mask1][common_mask]
-            dict2 = proj_count[mask2][common_mask]
+
+            dict1 = get_proj(mask1, common_mask)
+            dict2 = get_proj(mask2, common_mask)
 
             if len(dict1) > len(dict2):
                 dict1, dict2 = dict2, dict1
                 
-            for proj_s, count in dict1.items():
-                if proj_s in dict2:
-                    ans += count * dict2[proj_s]
-                    
+            for proj_tuple, count in dict1.items():
+                if proj_tuple in dict2:
+                    ans += count * dict2[proj_tuple]
+
     print(ans)
 
 if __name__ == '__main__':
