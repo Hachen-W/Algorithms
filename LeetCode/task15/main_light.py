@@ -5,8 +5,10 @@ class Solution:
         answer = []
         
         while left_index != right_index:
-            if nums[left_index] + nums[right_index] == sum_target:
-                answer.append([nums[left_index], nums[right_index]])
+            if (nums[left_index] + nums[right_index] == sum_target and 
+                    (nums[left_index], nums[right_index]) not in answer
+                    ):
+                answer.append((nums[left_index], nums[right_index]))
             if abs(nums[left_index] + nums[right_index]) < abs(sum_target):
                 left_index += 1
             else:
@@ -20,6 +22,8 @@ class Solution:
         data = []
         
         for start_index in range(nums_length - 2):
+            if start_index - 1 >= 0 and nums[start_index - 1] == nums[start_index]:
+                continue
             addition = self.find_all_sums(nums[start_index + 1:], -nums[start_index])
             if len(addition) == 0:
                 continue
@@ -31,12 +35,7 @@ class Solution:
                 ]
                 data.append(triple_cur)
 
-        unique_data = []
-        for item in data:
-            if item not in unique_data:
-                unique_data.append(item)
-
-        return unique_data
+        return data
 
 
-print(Solution().threeSum([-1,0,1,2,-1,-4]))
+print(Solution().threeSum([0, 0, 0, 0]))
