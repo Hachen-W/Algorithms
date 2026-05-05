@@ -1,6 +1,6 @@
 class Solution:
-    def find_all_sums(self, nums: list[int], sum_target: int) -> list[int]:
-        left_index = 0
+    def find_all_sums(self, nums: list[int], start_index, sum_target: int) -> list[int]:
+        left_index = start_index
         right_index = len(nums) - 1
         answer = []
         
@@ -24,7 +24,7 @@ class Solution:
         for start_index in range(nums_length - 2):
             if start_index - 1 >= 0 and nums[start_index - 1] == nums[start_index]:
                 continue
-            addition = self.find_all_sums(nums[start_index + 1:], -nums[start_index])
+            addition = self.find_all_sums(nums, start_index + 1, -nums[start_index])
             if len(addition) == 0:
                 continue
             for addition_first, addition_second in addition:
@@ -38,4 +38,4 @@ class Solution:
         return data
 
 
-print(Solution().threeSum([0, 0, 0, 0]))
+print(Solution().threeSum([-1,0,1,2,-1,-4]))
