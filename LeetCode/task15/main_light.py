@@ -1,19 +1,18 @@
 class Solution:
-    def find_sum(self, nums: list[int], sum_target: int) -> list[int]:
+    def find_all_sums(self, nums: list[int], sum_target: int) -> list[int]:
         left_index = 0
         right_index = len(nums) - 1
+        answer = []
         
-        while nums[left_index] + nums[right_index] != sum_target:
+        while left_index != right_index:
+            if nums[left_index] + nums[right_index] == sum_target:
+                answer.append([nums[left_index], nums[right_index]])
             if abs(nums[left_index] + nums[right_index]) < abs(sum_target):
                 left_index += 1
             else:
                 right_index -= 1
-            if left_index == right_index:
-                return None
 
-        if nums[left_index] + nums[right_index] != sum_target:
-            return None
-        return [left_index, right_index]
+        return answer
 
     def threeSum(self, nums: list[int]) -> list[list[int]]:
         nums.sort()
@@ -21,15 +20,16 @@ class Solution:
         data = []
         
         for start_index in range(nums_length - 2):
-            addition = self.find_sum(nums[start_index + 1:], -nums[start_index])
-            if addition is None:
+            addition = self.find_all_sums(nums[start_index + 1:], -nums[start_index])
+            if len(addition) == 0:
                 continue
-            triple_cur = [
-                nums[start_index],
-                nums[addition[0] + start_index + 1],
-                nums[addition[1] + start_index + 1]
-            ]
-            data.append(triple_cur)
+            for addition_first, addition_second in addition:
+                triple_cur = [
+                    nums[start_index],
+                    addition_first,
+                    addition_second
+                ]
+                data.append(triple_cur)
 
         unique_data = []
         for item in data:
